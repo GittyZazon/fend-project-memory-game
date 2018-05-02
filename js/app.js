@@ -10,6 +10,12 @@
  *   - add each card's HTML to the page
  */
 
+const cards = Array.prototype.slice.call(document.querySelectorAll('.card'));
+const symbols = ['fa-diamond', 'fa-paper-plane-o', 'fa-anchor', 'fa-bolt', 'fa-cube', 'fa-leaf', 'fa-bicycle', 'fa-bomb', 'fa-diamond', 'fa-paper-plane-o', 'fa-anchor', 'fa-bolt', 'fa-cube', 'fa-leaf', 'fa-bicycle', 'fa-bomb'];
+const cardFaces = Array.prototype.slice.call(document.querySelectorAll('.face'));
+const deck = document.querySelector('.deck');
+let showing = [];
+
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
@@ -21,9 +27,36 @@ function shuffle(array) {
         array[currentIndex] = array[randomIndex];
         array[randomIndex] = temporaryValue;
     }
-
+    console.log(array);
     return array;
 }
+
+const newSymbols = shuffle(symbols);
+
+for (let i = 0; i < cardFaces.length; i++) {
+	cardFaces[i].className = 'inner fa';
+	cardFaces[i].classList.add(newSymbols[i]);
+}
+
+
+
+for (let i = 0; i < cards.length; i++) {
+	cards[i].addEventListener('click', function flip(e){
+		this.classList.add('open', 'show');	});
+	cards[i].addEventListener('click', function opened(e) {
+		showing.push(this);
+		if(showing.length === 2 && showing[0].children == showing[1].children) {
+			showing[0].classList.remove('open', 'show');
+			showing[0].classList.add('match');
+			showing[1].classList.remove('open', 'show');
+			showing[1].classList.add('match');
+		}; /*else {
+	showing[0].children.classList.remove('open', 'show');
+	showing[1].children.classList.remove('open', 'show');
+}*/
+	});
+}
+	
 
 
 /*
