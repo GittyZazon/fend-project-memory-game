@@ -38,21 +38,17 @@ for (let i = 0; i < cardFaces.length; i++) {
 	cardFaces[i].classList.add(newSymbols[i]);
 }
 
-function opened() {
-	showing.push(this.firstElementChild);
-	this.removeEventListener('click', opened);
-}
-
 function checking() {
 	if (showing.length < 2){
-		
-	} else if (showing.length === 2 && showing[0].classList[2] == showing[1].classList[2]) {
+		return;
+	} else if (showing.length === 2 && (showing[0].classList[2] == showing[1].classList[2])) {
 		showing[0].parentElement.classList.remove('open', 'show');
 		showing[1].parentElement.classList.remove('open', 'show');
 		showing[0].parentElement.classList.add('match');
 		showing[1].parentElement.classList.add('match');
 		showing = [];
-	} else if (showing.length === 2 && showing[0].classList[2] !== showing[1].classList[2]){
+	} else if (showing.length === 2 && (showing[0].classList[2] !== showing[1].classList[2])){
+		//showing[0, 1].classList.add('animated', 'shake');
 		showing[0].parentElement.classList.remove('open', 'show');
 		showing[1].parentElement.classList.remove('open', 'show');
 		showing[0].parentElement.addEventListener('click', opened);
@@ -66,12 +62,19 @@ function checking() {
 	}
 }
 
+function opened() {
+	showing.push(this.firstElementChild);
+	this.removeEventListener('click', opened);
+}
+
+
+
 for (let i = 0; i < cards.length; i++) {
-	cards[i].addEventListener('click', opened);	
+	cards[i].addEventListener('click', checking);
+	cards[i].addEventListener('click', opened);
 	cards[i].addEventListener('click', function flip(){
 		this.classList.add('open', 'show');
 	});
-	cards[i].addEventListener('click', checking);
 }
 
 
