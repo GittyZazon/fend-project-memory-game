@@ -40,7 +40,7 @@ for (let i = 0; i < cardFaces.length; i++) {
 
 function flip (){
 	if (showing.length){
-		return
+		return;
 	}
 	for (let i = 0; i < cards.length; i++){
 		cards[i].classList.remove('open', 'show');
@@ -61,9 +61,17 @@ function checking() {
 		showing[0].parentElement.classList.remove('open', 'show');
 		showing[1].parentElement.classList.remove('open', 'show');
 		showing[0].parentElement.classList.add('match');
-		showing[1].parentElement.classList.add('match');	
+		showing[1].parentElement.classList.add('match');
+		showing = [];	
+	} else {
+		window.setTimeout(function close(){
+			showing[0].parentElement.classList.remove('open', 'show');
+			showing[1].parentElement.classList.remove('open', 'show');
+			showing = [];
+		}, 500);
+		
 	}
-	showing = [];
+	
 }
 
 
