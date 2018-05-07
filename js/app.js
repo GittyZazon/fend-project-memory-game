@@ -38,10 +38,18 @@ for (let i = 0; i < cardFaces.length; i++) {
 	cardFaces[i].classList.add(newSymbols[i]);
 }
 
-function flip() {
+function flip (){
+	if (showing.length){
+		return
+	}
+	for (let i = 0; i < cards.length; i++){
+		cards[i].classList.remove('open', 'show');
+	}
+}
+
+function opened() {
 	if (this.classList.length === 1){
 		showing.push(this.firstElementChild);
-		this.removeEventListener('click', flip);
 		this.classList.add('open', 'show');
 	}
 }
@@ -49,20 +57,13 @@ function flip() {
 function checking() {
 	if (showing.length < 2){
 		return;
-	} else if (showing.length === 2 && (showing[0].classList[2] == showing[1].classList[2])) {
+	} else if (showing[0].classList[2] == showing[1].classList[2]) {
 		showing[0].parentElement.classList.remove('open', 'show');
 		showing[1].parentElement.classList.remove('open', 'show');
 		showing[0].parentElement.classList.add('match');
-		showing[1].parentElement.classList.add('match');
-		showing = [];
-	} else if (showing.length === 2 && (showing[0].classList[2] !== showing[1].classList[2])){
-		//showing[0, 1].classList.add('animated', 'shake');
-		showing[0].parentElement.classList.remove('open', 'show');
-		showing[1].parentElement.classList.remove('open', 'show');
-		showing[0].parentElement.addEventListener('click', flip);
-		showing[1].parentElement.addEventListener('click', flip);
-		showing = [];
+		showing[1].parentElement.classList.add('match');	
 	}
+	showing = [];
 }
 
 
@@ -70,8 +71,9 @@ function checking() {
 
 
 for (let i = 0; i < cards.length; i++) {
-	cards[i].addEventListener('click', checking);
 	cards[i].addEventListener('click', flip);
+	cards[i].addEventListener('click', opened);
+	cards[i].addEventListener('click', checking);
 }
 
 
