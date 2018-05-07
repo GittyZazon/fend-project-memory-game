@@ -41,21 +41,48 @@ for (let i = 0; i < cardFaces.length; i++) {
 
 
 for (let i = 0; i < cards.length; i++) {
-	cards[i].addEventListener('click', function flip(e){
-		this.classList.add('open', 'show');	});
+	//cards[i].addEventListener('click', checking);
 	cards[i].addEventListener('click', function opened(e) {
-		showing.push(this);
-		if(showing.length === 2 && showing[0].children == showing[1].children) {
-			showing[0].classList.remove('open', 'show');
-			showing[0].classList.add('match');
-			showing[1].classList.remove('open', 'show');
-			showing[1].classList.add('match');
-		}; /*else {
-	showing[0].children.classList.remove('open', 'show');
-	showing[1].children.classList.remove('open', 'show');
-}*/
+		showing.push(this.firstElementChild);
+		this.removeEventListener('click', opened);
+		checking();
+	});	
+	cards[i].addEventListener('click', function flip(e){
+		this.classList.add('open', 'show');
+		//checking();	
 	});
 }
+
+//deck.addEventListener('click', checking);
+
+function checking() {
+	if (showing.length < 2){
+		return;
+	} else if (showing.length === 2 && showing[0].classList[2] == showing[1].classList[2]) {
+		showing[0].parentElement.classList.remove('open', 'show');
+		showing[1].parentElement.classList.remove('open', 'show');
+		showing[0].parentElement.classList.add('match');
+		showing[1].parentElement.classList.add('match');
+		showing = [];
+		//checking();
+	} else if (showing.length === 2 && showing[0].classList[2] !== showing[1].classList[2]){
+		showing[0].parentElement.classList.remove('open', 'show');
+		showing[1].parentElement.classList.remove('open', 'show');
+		showing[0, 1].addEventListener('click', function opened(e) {
+			showing.push(this);
+			this.removeEventListener('click', opened);
+		});
+		showing = [];
+		//checking();
+	} else if (showing.length > 2){ 
+		for (let i = 0; i < cards.length; i++){
+			cards[i].classList.remove('open', 'show');
+		}
+		showing = [];
+	}
+}
+
+
 	
 
 
