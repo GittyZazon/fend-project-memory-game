@@ -15,6 +15,7 @@ const symbols = ['fa-diamond', 'fa-paper-plane-o', 'fa-anchor', 'fa-bolt', 'fa-c
 const cardFaces = Array.prototype.slice.call(document.querySelectorAll('.face'));
 const deck = document.querySelector('.deck');
 let showing = [];
+let matches = document.getElementsByClassName('match');
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -34,10 +35,11 @@ function shuffle(array) {
 const newSymbols = shuffle(symbols);
 
 for (let i = 0; i < cardFaces.length; i++) {
-	cardFaces[i].className = 'inner fa';
+	cardFaces[i].className = 'inner fa animated';
 	cardFaces[i].classList.add(newSymbols[i]);
 }
 
+//If cards in showing array, cont.; otherwise flip back over
 function flip (){
 	if (showing.length){
 		return;
@@ -47,6 +49,8 @@ function flip (){
 	}
 }
 
+
+//If card does not contain revealing classes, open it
 function opened() {
 	if (this.classList.length === 1){
 		showing.push(this.firstElementChild);
@@ -54,34 +58,53 @@ function opened() {
 	}
 }
 
-function checking() {
-	if (showing.length < 2){
-		return;
-	} else if (showing[0].classList[2] == showing[1].classList[2]) {
-		showing[0].parentElement.classList.remove('open', 'show');
-		showing[1].parentElement.classList.remove('open', 'show');
-		showing[0].parentElement.classList.add('match');
-		showing[1].parentElement.classList.add('match');
-		showing = [];	
-	} else {
-		window.setTimeout(function close(){
-			showing[0].parentElement.classList.remove('open', 'show');
-			showing[1].parentElement.classList.remove('open', 'show');
-			showing = [];
-		}, 500);
-		
+window.onclick = function (e){
+	if (e.target == document.querySelector('.winBox')){
+		document.querySelector('.winBox').style.display = "none";
 	}
-	
 }
 
+//Checks for match
+function matching() {
+	if (showing.length < 2){
+		return;
+	} else if (showing[0].classList[3] == showing[1].classList[3]) {
+		showing[0].parentElement.classList.remove('open', 'show');
+		showing[1].parentElement.classList.remove('open', 'show');
+		showing[0].classList.add('rubberBand');
+		showing[1].classList.add('rubberBand');
+		showing[0].parentElement.classList.add('match');
+		showing[1].parentElement.classList.add('match');
+		window.setTimeout(function (){
+			showing[0].classList.remove('rubberBand');
+			showing[1].classList.remove('rubberBand');
+			showing = [];
+		}, 1150)	
+	} else {
+		showing[0].classList.add('shake');
+		showing[1].classList.add('shake');
+		window.setTimeout(function (){
+			showing[0].parentElement.classList.remove('open', 'show');
+			showing[1].parentElement.classList.remove('open', 'show');
+			showing[0].classList.remove('shake');
+			showing[1].classList.remove('shake');
+			showing = [];
+		}, 1150);
+		
+	}
+	if (matches.length == cards.length){
+		for (let i = 0; i < cards.length; i++){
+			cards[i].firstElementChild.classList.add()
+		}
+		document.querySelector('.winBox').style.display = "block";
+	}
+}
 
-
-
-
+//Add event listeners for all fx to all cards in order
 for (let i = 0; i < cards.length; i++) {
 	cards[i].addEventListener('click', flip);
 	cards[i].addEventListener('click', opened);
-	cards[i].addEventListener('click', checking);
+	cards[i].addEventListener('click', matching);
 }
 
 
