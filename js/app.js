@@ -16,6 +16,9 @@ const cardFaces = Array.prototype.slice.call(document.querySelectorAll('.face'))
 const deck = document.querySelector('.deck');
 let showing = [];
 let matches = document.getElementsByClassName('match');
+let stars = document.querySelector('.stars')
+let count = 0;
+let timing;
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -39,7 +42,7 @@ for (let i = 0; i < cardFaces.length; i++) {
 	cardFaces[i].classList.add(newSymbols[i]);
 }
 
-//If cards in showing array, cont.; otherwise flip back over
+//If cards in showing array, nothing; otherwise flip back over
 function flip (){
 	if (showing.length){
 		return;
@@ -58,9 +61,23 @@ function opened() {
 	}
 }
 
-window.onclick = function (e){
-	if (e.target == document.querySelector('.winBox')){
-		document.querySelector('.winBox').style.display = "none";
+//After x number of moves, ticks counter
+function removeStar() {
+	count += 1
+	if (count == 16) {
+		stars.firstElementChild.remove();
+	} else if (count == 32) {
+		stars.firstElementChild.remove();
+	} else if (count == 48) {
+		stars.firstElementChild.remove();
+	} else if (count == 64) {
+		stars.firstElementChild.remove();
+	} else if (count == 80) {
+		stars.firstElementChild.remove();
+	}
+	if (stars.children.length === 0){
+		document.querySelector('.youWin').firstElementChild.innerHTML = 'Sorry, Try Again!'
+		document.querySelector('.winBox').style.display = "block";
 	}
 }
 
@@ -79,25 +96,51 @@ function matching() {
 			showing[0].classList.remove('rubberBand');
 			showing[1].classList.remove('rubberBand');
 			showing = [];
-		}, 1150)	
+		}, 750)	
 	} else {
-		showing[0].classList.add('shake');
-		showing[1].classList.add('shake');
+		showing[0].classList.add('wobble');
+		showing[1].classList.add('wobble');
 		window.setTimeout(function (){
 			showing[0].parentElement.classList.remove('open', 'show');
 			showing[1].parentElement.classList.remove('open', 'show');
-			showing[0].classList.remove('shake');
-			showing[1].classList.remove('shake');
+			showing[0].classList.remove('wobble');
+			showing[1].classList.remove('wobble');
 			showing = [];
-		}, 1150);
+		}, 750);
 		
 	}
 	if (matches.length == cards.length){
 		for (let i = 0; i < cards.length; i++){
-			cards[i].firstElementChild.classList.add()
+			cards[i].firstElementChild.classList.add('infinite', 'flip');
 		}
+		clearInterval(timing);
+		document.querySelector('.score').innerHTML = "Your score is: <br>" + stars.innerHTML + "<br> Your time was: <br>" + document.querySelector('.timer').innerHTML
 		document.querySelector('.winBox').style.display = "block";
 	}
+}
+
+window.onclick = function (e){
+	if (e.target == document.querySelector('.winBox')){
+		document.querySelector('.winBox').style.display = "none";
+	}
+}
+
+deck.addEventListener('click', function timeIt(e){
+	let sec = 0;
+	function pad ( val ) { return val > 9 ? val : "0" + val; }
+	timing = setInterval( function(){
+    	document.getElementById("seconds").innerHTML=pad(++sec%60);
+    	document.getElementById("minutes").innerHTML=pad(parseInt(sec/60,10));
+	}, 1000);
+	deck.removeEventListener('click', timeIt);
+});
+
+document.querySelector('button').onclick = function (e){
+	window.location.reload();
+}
+
+document.querySelector('.restart').onclick = function (e){
+	window.location.reload();
 }
 
 //Add event listeners for all fx to all cards in order
@@ -105,6 +148,7 @@ for (let i = 0; i < cards.length; i++) {
 	cards[i].addEventListener('click', flip);
 	cards[i].addEventListener('click', opened);
 	cards[i].addEventListener('click', matching);
+	cards[i].addEventListener('click', removeStar);
 }
 
 
